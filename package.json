@@ -6,7 +6,9 @@
   "scripts": {
     "app:deps": "ts-node src/index.ts --deps",
     "app:ways": "ts-node src/index.ts --ways",
-    "app:help": "ts-node src/index.ts --help"
+    "app:ways:g": "ts-node src/index.ts --ways-games",
+    "app:help": "ts-node src/index.ts --help",
+    "code:check": "tsc --noEmit"
   },
   "author": "",
   "license": "ISC",

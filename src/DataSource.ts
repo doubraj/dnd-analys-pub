@@ -1,5 +1,7 @@
-import { AreaType } from "./Area";
-import { AreaRaw } from "./DataFactory";
+import { AreaType } from './Area';
+import { AreaRaw } from './AreaFactory';
+import { RawGame } from './GameFactory';
+import { Prepare as P } from './Game';
 
 export const rawAreas: AreaRaw[] = [
     { label: '1', name: 'Duběnka', constraints: [{}], type: AreaType.Start },
@@ -9,9 +11,9 @@ export const rawAreas: AreaRaw[] = [
     { label: '5', name: 'Přístaviště', constraints: [{ and: ['3', '4'] }], type: AreaType.BaseHalf },
     { label: '6', name: 'Nehostinná tundra', constraints: [{ and: ['2', '4'] }], type: AreaType.BaseHalf },
     { label: '7x', name: 'Šamanova chýše v lesích', constraints: [{ and: ['6'] }, { not: ['7y'] }], type: AreaType.BaseHalf },
-    { label: '7y', name: 'Lovecká chatrč', constraints: [{ and: ['6']}, { not: ['7x'] }], type: AreaType.BaseHalf },
+    { label: '7y', name: 'Lovecká chatrč', constraints: [{ and: ['6'] }, { not: ['7x'] }], type: AreaType.BaseHalf },
     { label: '8x', name: 'Doly a Daně', constraints: [{ and: ['2', '5'] }, { not: ['8y'] }], type: AreaType.BaseFull },
-    { label: '8y', name: 'Starostovy Horní Mousy', constraints: [{ and: ['2', '5']}, { not: ['8x'] }], type: AreaType.BaseFull },
+    { label: '8y', name: 'Starostovy Horní Mousy', constraints: [{ and: ['2', '5'] }, { not: ['8x'] }], type: AreaType.BaseFull },
     { label: 'B1', name: 'Skalní město', constraints: [{ and: ['3'] }], type: AreaType.BaseBonus },
     { label: 'B2', name: 'Maják', constraints: [{ or: ['7y', '8y'] }], type: AreaType.BaseBonus },
     { label: '9a', name: 'Vesnice v podhradí', constraints: [{ or: ['7x', '7y'] }, { or: ['8x', '8y'] }, { not: ['9b', '10b'] }], type: AreaType.FinalHalf },
@@ -22,4 +24,44 @@ export const rawAreas: AreaRaw[] = [
     { label: '10b', name: 'Jeskyně skřetů', constraints: [{ or: ['7x', '7y'] }, { or: ['8x', '8y'] }, { not: ['9a', '10a'] }], type: AreaType.FinalHalf },
     { label: '11b', name: 'Dračí doupě', constraints: [{ and: ['9b', '10b'] }], type: AreaType.End },
     { label: 'Bb', name: 'Oáza klidu', constraints: [{ or: ['9b', '10b'] }], type: AreaType.FinalBonus },
+];
+
+export const rawGames: RawGame[] = [
+    { area: '1', name: 'Stavba aut - zavody', length: 2, prepare: P.EASY, strength: 2, manual: 1, thinking: 1, coop: 1, single: 1 },
+    { area: '2', name: 'Cesta plná překážek', length: 1, prepare: P.HARD60, strength: 1, thinking: 1, coop: 1, single: 1 },
+    { area: '3', name: 'Výroba a střelba z luku', length: 2, prepare: P.EASY, manual: 1, thinking: 1, single: 1 },
+    { area: '4', name: 'Stavba a plavba na voru', length: 2, prepare: P.EASY, manual: 2, thinking: 1, coop: 1 },
+    { area: '5', name: 'Pac-man', length: 1, prepare: P.HARD60, strength: 1, single: 2 },
+    { area: '6', name: 'Štafetová orientace v území - kódy', length: 1, prepare: P.EASY, strength: 1, knowledge: 1, single: 2 },
+    { area: '7x', name: 'Totem', length: 1, prepare: P.EASY, strength: 2, thinking: 2, coop: 1, single: 1 },
+    { area: '7y', name: 'Cesta s handicapy', length: 1, prepare: P.HARD60, strength: 1, manual: 1, coop: 1 },
+    { area: '8x', name: 'Balení narychlo', length: 1, prepare: P.EASY, strength: 1, knowledge: 1, thinking: 2, single: 2 },
+    { area: '8y', name: 'Přístavy', length: 1, prepare: P.EASY, strength: 2, thinking: 1, single: 2 },
+    { area: '9a', name: 'Vykopávky', length: 1, prepare: P.EASY, strength: 1, knowledge: 2, coop: 1, single: 1 },
+    { area: '10a', name: 'Manažeři', length: 1, prepare: P.EASY, thinking: 2, coop: 2 },
+    { area: '9b', name: 'Špioni', length: 1, prepare: P.HARD60, strength: 2, thinking: 1, single: 1 },
+    { area: '10b', name: 'Únikovka', length: 1, prepare: P.EXTREME, strength: 1, knowledge: 2, thinking: 2, coop: 2 },
+    { area: undefined, name: 'Bludiště', length: 1, prepare: P.HARD60, thinking: 2, coop: 2 },
+    { area: undefined, name: 'Zkoušky', length: 1, prepare: P.EASY, knowledge: 2, single: 2 },
+    { area: undefined, name: 'Vysílání morseovky', length: 1, prepare: P.HARD60, knowledge: 2, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Strategické zabírání města', length: 1, prepare: P.EASY, knowledge: 1, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Stavba mostů – zátěž', length: 1, prepare: P.EASY, manual: 2, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Bitva', length: 1, prepare: P.HARD60, strength: 2, coop: 1, single: 1 },
+    { area: undefined, name: 'Cesta po otázkách', length: 1, prepare: P.HARD60, knowledge: 2, strength: 1, coop: 2 },
+    { area: undefined, name: 'Azimuťák', length: 1, prepare: P.EXTREME, strength: 1, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Orientační běh', length: 1, prepare: P.EXTREME, strength: 2, thinking: 2, single: 1 },
+    { area: undefined, name: '1000 fáborků', length: 1, prepare: P.HARD60, strength: 2, coop: 1 },
+    { area: undefined, name: 'Štafetová pošta', length: 1, prepare: P.EASY, strength: 1, thinking: 1, coop: 1 },
+    { area: undefined, name: 'Výroba dárků / obrazů / předmětů', length: 1, prepare: P.EASY, manual: 2, single: 1 },
+    { area: undefined, name: 'Vaření', length: 1, prepare: P.EASY, manual: 2, coop: 1 },
+    { area: undefined, name: 'Kroket', length: 1, prepare: P.HARD60, manual: 2, coop: 2 },
+    { area: undefined, name: 'Apokalypsa', length: 1, prepare: P.EXTREME, strength: 1, knowledge: 1, thinking: 2, coop: 2 },
+    { area: undefined, name: 'Den, bez vedoucích', length: 2, prepare: P.HARD60, thinking: 2, coop: 2 },
+    { area: undefined, name: 'Kurýři', length: 1, prepare: P.HARD60, strength: 2, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Noční lov', length: 1, prepare: P.EASY, manual: 1, thinking: 1, single: 2 },
+    { area: undefined, name: 'Bojovka  - noční stezka', length: 1, prepare: P.HARD60, single: 1 },
+    { area: undefined, name: 'Traverzování bažin', length: 1, prepare: P.EASY, thinking: 1, manual: 1, coop: 2 },
+    { area: undefined, name: 'Akvadukt  - vodní soustava', length: 1, prepare: P.EASY, manual: 1, thinking: 1, coop: 2 },
+    { area: undefined, name: 'Dance battle', length: 1, prepare: P.EASY, manual: 2, coop: 1 },
+    { area: undefined, name: 'Perspektiva  - 9 bran podsvětí', length: 1, prepare: P.EXTREME, thinking: 2, coop: 2 },
 ];

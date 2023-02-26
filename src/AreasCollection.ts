@@ -1,5 +1,6 @@
-import Area, {AreaType, Constraint} from './Area';
-import {Logger} from "./Logger";
+import Area, { AreaType, Constraint } from './Area';
+import { Logger } from './Logger';
+import { Game, GameTags } from './Game';
 
 interface AreaRef {
     refPrefix: string;
@@ -14,7 +15,10 @@ interface AreaWithRefs {
 interface Way {
     points: Area[],
     completed: boolean,
+    gameTags?: GameTags,
 }
+
+type TagKey = keyof GameTags;
 
 export default class AreasCollection {
     public constructor(
@@ -22,12 +26,57 @@ export default class AreasCollection {
         private readonly logger: Logger,
     ) {}
 
+    public calculateMinMaxAvgTag(ways: Way[], tagKey: TagKey): { min: number, max: number, avg: number } {
+        const res = { min: 9, max: 0, avg: 0 };
+        ways.forEach((w) => {
+            if (w.gameTags === undefined) {
+                throw new Error('Area tags are not calculated, call "calculateGameTags" first!');
+            }
+            res.min = Math.min(res.min, w.gameTags[tagKey]);
+            res.max = Math.max(res.max, w.gameTags[tagKey]);
+            res.avg += w.gameTags[tagKey];
+        });
+        res.avg = Math.round((100 * res.avg) / ways.length) / 100;
+        return res;
+    }
+
+    public calculateGameTags(ways: Way[]): void {
+        ways.forEach((way) => {
+            way.gameTags = { strength: 0, manual: 0, knowledge: 0, thinking: 0, single: 0, coop: 0 };
+            way.points.forEach((area) => {
+                const game = area.getGame();
+                if (!game?.tags || !way.gameTags) return;
+                way.gameTags.strength += game.tags.strength;
+                way.gameTags.manual += game.tags.manual;
+                way.gameTags.knowledge += game.tags.knowledge;
+                way.gameTags.thinking += game.tags.thinking;
+                way.gameTags.single += game.tags.single;
+                way.gameTags.coop += game.tags.coop;
+            });
+        });
+    }
+
+    public assignGames(games: Game[]): number {
+        let assigned = 0;
+        games.forEach((game) => {
+            const areaLabel = game.area;
+            this.areas.forEach((area) => {
+                if (areaLabel === area.label) {
+                    area.setGame(game);
+                    assigned++;
+                    return;
+                }
+            });
+        });
+        return assigned;
+    }
+
     public getAllPossibleWays(): Way[] {
         try {
             const start = this.getStartArea();
             const unlockedIxs = [start.index];
             const remainingMx = this.areas.map(() => true);
-            return this.tryAllWays(unlockedIxs, remainingMx, { points: [], completed: false })
+            return this.tryAllWays(unlockedIxs, remainingMx, { points: [], completed: false });
             // return this.tryAllWays([start.index], , { points: []});
         } catch (e: any) {
             this.logger.error(e.message);
@@ -39,13 +88,13 @@ export default class AreasCollection {
         unlockedIxs: number[],
         remainingMx: boolean[],
         { points }: Way,
-        ignoreBonuses: boolean = true,
+        ignoreBonuses = true,
     ): Way[] {
         const completed = this.isCompleted(remainingMx);
         if (unlockedIxs.length === 0 || completed) {
             return [{ points, completed }];
         }
-        const possibleWays = unlockedIxs.map((unlockedIndex, fieldIx) => {
+        const possibleWays = unlockedIxs.map((unlockedIndex) => {
             // Complete area
             remainingMx[unlockedIndex] = false;
             // Calculate next unlocks

@@ -1,3 +1,5 @@
+import { Game } from './Game';
+
 export interface Constraint {
     or?: number[];
     and?: number[];
@@ -16,6 +18,7 @@ export enum AreaType {
 
 export default class Area {
     private constraints: Constraint[] = [];
+    private game?: Game;
 
     public constructor(
         public readonly index: number,
@@ -30,6 +33,14 @@ export default class Area {
 
     public getConstraints(): Constraint[] {
         return this.constraints;
+    }
+
+    public setGame(game: Game): void {
+        this.game = game;
+    }
+
+    public getGame(): Game | undefined {
+        return this.game;
     }
 
     public isBonus(): boolean {
